@@ -1,0 +1,101 @@
+<mujoco model="reindeer">
+
+  <compiler angle="degree" coordinate="local" inertiafromgeom="true"/>
+  <option integrator="RK4" timestep="0.01" />
+  <option gravity="0 0 -9.81" />
+  <custom>
+    <numeric data="0.0 0.0 0.55 1.0 0.0 0.0 0.0 0.0 1.0 0.0 -1.0 0.0 -1.0 0.0 1.0" name="init_qpos"/>
+  </custom>
+  <default>
+    <joint armature="1" damping="1" limited="true"/>
+    <geom conaffinity="1" condim="3" density="5.0" friction="1 0.5 0.5" margin="0.01" rgba="0.8 0.6 0.4 1"/>
+  </default>
+  <asset>
+    <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>
+    <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>
+    <texture builtin="checker" height="100" name="texplane" rgb1="0 0 0" rgb2="0.8 0.8 0.8" type="2d" width="100"/>
+    <material name="MatPlane" reflectance="0.5" shininess="1" specular="1" texrepeat="60 60" texture="texplane"/>
+    <material name="geom" texture="texgeom" texuniform="true"/>
+  </asset>
+
+  <worldbody>
+    <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 1.3" specular=".1 .1 .1"/>
+    <geom conaffinity="1" condim="3" material="MatPlane" name="floor" pos="0 0 0" rgba="0.8 0.9 0.8 1" size="40 40 40" type="plane"/>
+    
+    
+    <body name ="wall" pos="0 -5 0">
+      <geom name="wall_geom" pos="0 -5 0" size="1.5 0.2 10" type="box"/>
+    </body>
+
+
+    <body name ="modules" pos="0 0 0.7">  
+      <!-- adds gravity effect -->
+      <joint armature="0" damping="0" limited="false" margin="0.01" name="root" pos="0 0 0" type="free"/>
+      <body name ="head_module" pos="0 0 0.7">  
+
+        
+          <!-- rotation w.r.t z-axis. (-80 ~ 80 deg) -->
+        
+        <body name="joint1" pos = "0 0 0">
+          <geom name="head_geom" pos="0 0 0.7" size=".2 .25 .25" type="box"/>
+          <joint axis="0 0 1" name="head_motor" pos="0.0 0.0 1.0" range="-80 80" type="hinge"/>
+          <geom fromto="0 0 1.0 0 0 1.1" name="aux1" size="0.05" type="capsule"/>
+          <geom fromto="0 0 0.7 0.2 0.0 0.7" name="left_front_leg_geom" size="0.05" type="capsule"/>
+          <geom name="dummy_joint1" pos="0.2 0 0.7" size="0.06" type="sphere"/>
+          <geom fromto="0 0 0.7 -0.2 0.0 0.7" name="right_front_leg_geom" size="0.05" type= "capsule"/>
+          <geom name="dummy_joint2" pos="-0.2 0.0 0.7" size="0.06" type="sphere"/>
+          <geom fromto="0 0 0.7 0 -0.3 0.7" name="distance_sensor_geom" size="0.05" type="capsule"/>
+          <geom fromto="0.2 0.0 0.7 0.4 0.0 0.6" name="left_front_ankle_geom" size="0.05" type="capsule"/>
+          <geom fromto="-0.2 0.0 0.7 -0.4 0.0 0.6" name="right_front_ankle_geom" size="0.05" type="capsule"/>
+          <geom name="dummy_joint3" pos="0.4 0.0 0.6" size="0.1" type="sphere"/> 
+          <geom name="dummy_joint4" pos="-0.4 0.0 0.6" size="0.1" type="sphere"/>
+          <geom fromto="0.4 0.0 0.6 0.44 -0.2 0.4" name="left_front_foot_geom" size="0.05" type="capsule"/>
+          <geom fromto="-0.4 0.0 0.6 -0.44 -0.2 0.4" name="right_front_foot_geom" size="0.05" type="capsule"/>
+          <site name="accel1" type="box" pos="0 0 0.7" size=".2 .25 .25" rgba=".9 .0 .0 1"/>
+          <site name="range" type="box" pos="0 0 0.7" size=".2 .25 .25" rgba="0 0 .9 0.1"/>
+        </body>
+
+        
+
+        
+      </body>   
+    
+      <geom fromto="0 0 1.8 0.0 0.3 1.74" name="link1" size="0.05" type="capsule"/>
+      <geom fromto="0 0.3 1.74 0 0.5 1.4" name="link2" size="0.05" type="capsule"/>
+
+      <body name ="tail_module" pos="0 0 0.7">
+        <!-- tail -->
+        
+        <body name="joint2" pos = "0 0 0">
+          <geom name="tail_geom" pos="0 1.0 0.7" size=".2 .25 .25" type="box"/>
+          <joint axis="0 1 0" name="tail_motor" pos="0 0.75 0.7" range="-180 180" type="hinge"/>
+          <geom fromto="0 0.5 0.7 0 0.75 0.7" name="joint_link" size="0.05" type="capsule"/>
+          <geom name="dummy_joint6" pos="0.2 1.0 0.7" size="0.06" type="sphere"/>
+          <geom name="dummy_joint7" pos="-0.2 1.0 0.7" size="0.06" type="sphere"/>
+          <geom fromto="0.2 1.0 0.7 0.4 1.0 0.6" name="left_back_ankle_geom" size="0.05" type="capsule"/>
+          <geom fromto="-0.2 1.0 0.7 -0.4 1.0 0.6" name="right_back_ankle_geom" size="0.05" type="capsule"/>
+          <geom name="dummy_joint8" pos="0.4 1.0 0.6" size="0.1" type="sphere"/> 
+          <geom name="dummy_joint9" pos="-0.4 1.0 0.6" size="0.1" type="sphere"/>
+          <geom fromto="0.4 1.0 0.6 0.44 1.2 0.4" name="left_back_foot_geom" size="0.05" type="capsule"/>
+          <geom fromto="-0.4 1.0 0.6 -0.44 1.2 0.4" name="right_back_foot_geom" size="0.05" type="capsule"/>
+          <site name="accel2" type="box" pos="0 1.0 0.7" size=".2 .25 .25" rgba=".0 .0 .9 1"/>
+        </body>
+
+  
+      </body>
+
+    </body>
+
+  </worldbody>
+  
+  <actuator>
+    <position joint="head_motor" gear="1" kp="10" ctrllimited="false" forcelimited="false" />
+    <position joint="tail_motor" gear="1" kp="10" ctrllimited="false" forcelimited="false" />
+  </actuator>
+
+  <sensor>
+    <accelerometer site="accel1"/>
+    <accelerometer site="accel2"/>
+    <rangefinder site="range"/>
+  </sensor>
+</mujoco>

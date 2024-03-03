@@ -1,0 +1,9 @@
+{
+    "timesteps_per_batch" :  2048,                 
+	"max_timesteps_per_episode" : 1000,           
+	"n_updates_per_iteration" : 5,               
+	"lr" : 0.005,                               
+	"gamma" : 0.95,                             
+	"clip_epsilon" : 0.2,
+    "model_save_freq" : 10
+}
